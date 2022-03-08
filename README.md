@@ -1,70 +1,144 @@
-# Getting Started with Create React App
+# Redux
+Redux é uma biblioteca para armazenamento de estados de aplicações JavaScript, criado por Dan Abramov. Ele nasceu através de uma implementação do Flux, uma arquitetura criada pelo Facebook para contribuir com as aplicações de User Interface, utilizando o conceito de fluxo de dados unidirecional. Quando desenvolvemos aplicações utilizando Javascript, sempre temos que lidar com o gerenciamento de estado. O Redux veio para suprir essa necessidade de simplificar o controle dos estados de uma aplicação. Compartilhar estados entre vários componentes diferentes se torna uma coisa muito fácil quando o utilizamos.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Yarn
 
-## Available Scripts
+### `yarn add redux react-redux`
 
-In the project directory, you can run:
+**Note: Nesse sentido, a dependência “extra” é para fazer a conexão do React com o Redux.!**
 
-### `npm start`
+## 
+###  Store
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+É um container imutável, isto é, não há alteração dele, e sim evolução, que armazena e centraliza o estado global da aplicação. Com isso, podemos dizer que é o conjunto de estados da aplicação centralizados/reunidos em um apenas um lugar.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 
 
-### `npm test`
+### Reducers
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Reducers são funções puras (funções que não geram efeitos colaterais, isto é, para a mesma entrada, temos a mesma saída) com a capacidade de disparar eventos e que podem alterar um atributo da store, evoluindo o estado global da aplicação.
 
-### `npm run build`
+  💡 ContextApi não permite usar uma api para manipular os dados, nesse caso o redux é a melhor questão.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 
+### Provider
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+[redux com react para iniciantes](https://serfrontend.com/blog/redux-com-react-para-iniciantes)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Provider é o componente que permite que o react tenha acesso ao redux.
 
-### `npm run eject`
+O Provider permite que o store se conecte à hierarquia de componentes a qual pertence.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+const minhaStore = createStore(reducer)
+ReactDOM.render(<Provider store={minhaStore}>
+			<App/>
+		</Provider>, 
+		document.getElementById('root')
+);
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Envolvemos todo o nosso componente App no componente Provider. Agora todo o App tem acesso ao store. Criei uma store usando o método createStore passando qual o reducer que deve olhar para as actions e os states. E passo essa store para o Provider.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### useSelector
 
-## Learn More
+Esse método, que também deve ser importado de ‘react-redux’, recebe um callback como parâmetro. Esse callback deve retornar o state novo. Se o state novo for diferente do anterior, então o componente irá renderizar o novo valor na tela.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+O useSelector será executado sempre que houver um dispatch de uma action.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+##
+### Reducer
 
-### Code Splitting
+Um reducer é uma função que recebe o estado atual e um objeto de ação, decide como atualizar o estado, se necessário, e retorna o novo estado: (estado, ação) => newState. Você pode pensar em um reducer como um ouvinte de eventos que manipula eventos com base no tipo de ação (evento) recebido.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```jsx
+const initialState = { value: 0 }
 
-### Analyzing the Bundle Size
+function counterReducer(state = initialState, action) {
+  // Check to see if the reducer cares about this action
+  if (action.type === 'counter/incremented') {
+    // If so, make a copy of `state`
+    return {
+      ...state,
+      // and update the copy with the new value
+      value: state.value + 1
+    }
+  }
+  // otherwise return the existing state unchanged
+  return state
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### **Store -Estado Globalizado**
 
-### Making a Progressive Web App
+O estado atual do aplicativo Redux reside em um objeto chamado store.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+O armazenamento é criado passando um redutor e possui um método chamado getState que retorna o valor do estado atual.
 
-### Advanced Configuration
+```jsx
+import { configureStore } from '@reduxjs/toolkit'
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+const store = configureStore({ reducer: counterReducer })
 
-### Deployment
+console.log(store.getState())
+// {value: 0}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### **Dispatch**
 
-### `npm run build` fails to minify
+A loja Redux tem um método chamado dispatch. A única maneira de atualizar o estado é chamar store.dispatch() e passar um objeto de ação. A loja executará sua função redutora e salvará o novo valor de estado dentro, e podemos chamar getState() para recuperar o valor atualizado:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```jsx
+store.dispatch({ type: 'counter/incremented' })
+
+console.log(store.getState())
+// {value: 1}
+```
+
+### **Selectors**
+
+Seletores são funções que sabem como extrair informações específicas de um valor de estado de armazenamento. À medida que um aplicativo cresce, isso pode ajudar a evitar a repetição da lógica, pois diferentes partes do aplicativo precisam ler os mesmos dados:
+
+### useSelector
+
+é um hook que serve para ler um estado e tornar visível na aplicação. 
+
+```jsx
+function App() {
+  const counter = useSelector( state => state.counter);
+  const isLogged = useSelector( state => state.isLogged);
+  const dispatch = useDispatch();
+
+  return (
+    <div className='App'>
+      <h1> Counter {counter} </h1>
+      <button onClick={() => dispatch(increment())}> + </button>
+      
+      <button onClick={() => dispatch(decrement())}> - </button>
+
+      {isLogged ? <h3>Valuable Information </h3> : ''}
+      
+    </div>
+  );
+}
+```
+
+### Action
+
+As Actions são objetos que indicam diretamente uma ação realizada no software, essa Action pode ser algo disparado pelo próprio usuário ou algo disparado pela própria aplicação.
+
+A Action possui sempre uma propriedade `type` única que é utilizada pelo Redux para distinguir qual ação está sendo realizada, esse conceito recebe o nome de **Action Type**.
+
+```jsx
+// Exemplo de action
+
+{
+  type: 'LOGIN',
+  payload: {
+    username: 'admin',
+    password: '123456'
+  },
+}
+```
