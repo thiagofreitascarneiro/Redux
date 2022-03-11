@@ -8,6 +8,10 @@ const counterReducer = (state = 0, action) => {
             return state + 1;
         case "DECREMENT":
             return state - 1;
+        case "MULTIPLY":
+            return action.payload;
+        case 'RESULT':
+            return state * action.payload
         default:
             return state;
     }

@@ -14,3 +14,25 @@ export const decrement = () => {
     }
 }
 
+export const logIn = () => {
+    return {
+        type: 'SIGN_IN',
+    }
+}
+
+export const multiply = (value) => {
+return {
+    type: 'MULTIPLY',
+    payload: value
+}
+}
+
+export const result = () => {
+
+    let num = 2
+    
+    return {
+        type: 'RESULT',
+        payload: num = num 
+    }
+}
