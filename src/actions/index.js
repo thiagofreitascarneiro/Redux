@@ -27,12 +27,18 @@ return {
 }
 }
 
-export const result = () => {
+export const result = (value) => {
 
-    let num = 2
     
     return {
         type: 'RESULT',
-        payload: num = num 
+        payload:  value 
+    }
+}
+
+export const zero = () => {
+    return {
+        type: 'ZERO'
+
     }
 }

@@ -12,6 +12,8 @@ const counterReducer = (state = 0, action) => {
             return action.payload;
         case 'RESULT':
             return state * action.payload
+        case 'ZERO':
+            return state = 0 
         default:
             return state;
     }
